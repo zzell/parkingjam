@@ -5,14 +5,16 @@ import { Car as CarType } from '@/lib/types';
 import { getValidMoves } from '@/lib/engine';
 import { BoardState } from '@/lib/types';
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 const SHORT_SPRITES = [
-  '/sprites/short_1.png', '/sprites/short_2.png', '/sprites/short_3.png',
-  '/sprites/short_4.png', '/sprites/short_5.png', '/sprites/short_6.png',
-  '/sprites/short_7.png', '/sprites/short_8.png', '/sprites/short_9.png',
-  '/sprites/short_10.png', '/sprites/short_11.png',
+  `${BASE}/sprites/short_1.png`, `${BASE}/sprites/short_2.png`, `${BASE}/sprites/short_3.png`,
+  `${BASE}/sprites/short_4.png`, `${BASE}/sprites/short_5.png`, `${BASE}/sprites/short_6.png`,
+  `${BASE}/sprites/short_7.png`, `${BASE}/sprites/short_8.png`, `${BASE}/sprites/short_9.png`,
+  `${BASE}/sprites/short_10.png`, `${BASE}/sprites/short_11.png`,
 ];
 const LONG_SPRITES = [
-  '/sprites/long_1.png', '/sprites/long_2.png', '/sprites/long_3.png',
+  `${BASE}/sprites/long_1.png`, `${BASE}/sprites/long_2.png`, `${BASE}/sprites/long_3.png`,
 ];
 
 const CAR_COLORS = [
@@ -60,7 +62,7 @@ export default function Car({ car, cellSize, gap, board, onMove, colorIndex, dis
 
   const color = car.isTarget ? '#e74c3c' : CAR_COLORS[colorIndex % CAR_COLORS.length];
   const useSprite = true;
-  const pool = car.isTarget ? ['/sprites/main.png'] : (car.length === 2 ? SHORT_SPRITES : LONG_SPRITES);
+  const pool = car.isTarget ? [`${BASE}/sprites/main.png`] : (car.length === 2 ? SHORT_SPRITES : LONG_SPRITES);
   const spriteSrc = pool[(car.spriteIndex ?? 0) % pool.length];
   const flipRef = useRef(Math.random() < 0.5);
 
