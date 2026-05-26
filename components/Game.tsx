@@ -100,7 +100,7 @@ export default function Game() {
   }, [initialBoard]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '12px 6px 8px', height: '100dvh', overflow: 'hidden', background: '#050510', color: '#fff', boxSizing: 'border-box' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '12px 0 8px', height: '100dvh', overflow: 'hidden', background: '#050510', color: '#fff', boxSizing: 'border-box' }}>
 
       {/* Title */}
       <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 10 }}>

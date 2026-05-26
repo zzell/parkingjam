@@ -17,7 +17,7 @@ const GAP = 4;
 export default function Grid({ board, onMove, disabled, animatingCarId }: GridProps) {
   const [gridPx, setGridPx] = React.useState(480);
   React.useEffect(() => {
-    const update = () => setGridPx(Math.min(480, window.innerWidth - 48, window.innerHeight - 220));
+    const update = () => setGridPx(Math.min(480, window.innerWidth - 8, window.innerHeight - 220));
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);

@@ -73,10 +73,10 @@ export default function Controls({
   };
 
   return (
-    <div style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: 6 }}>
+    <div style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: 6, padding: '0 8px', boxSizing: 'border-box' }}>
 
       {/* Level + Generate */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ fontFamily: PX, fontSize: 8, color: CYAN, textShadow: `0 0 6px ${CYAN}`, flexShrink: 0 }}>LEVEL</span>
         <div style={{ display: 'flex', gap: 4 }}>
           {DIFFICULTY_LEVELS.map(({ label, value }) => {
@@ -102,7 +102,7 @@ export default function Controls({
             );
           })}
         </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0, flexBasis: 'auto' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0 }}>
           <button
             onClick={handleShare}
             disabled={isGenerating}
@@ -121,7 +121,7 @@ export default function Controls({
               transition: 'all 0.15s',
             }}
           >
-            {copied ? 'COPIED!' : 'SHARE'}
+            {copied ? '✓' : '⬆'}
           </button>
           <button
             onClick={onGenerate}
@@ -140,7 +140,7 @@ export default function Controls({
               whiteSpace: 'nowrap',
             }}
           >
-            {isGenerating ? 'GEN…' : 'GENERATE'}
+            {isGenerating ? '…' : 'NEW'}
           </button>
         </div>
       </div>
