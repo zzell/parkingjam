@@ -76,7 +76,7 @@ export default function Controls({
     <div style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: 6 }}>
 
       {/* Level + Generate */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         <span style={{ fontFamily: PX, fontSize: 8, color: CYAN, textShadow: `0 0 6px ${CYAN}`, flexShrink: 0 }}>LEVEL</span>
         <div style={{ display: 'flex', gap: 4 }}>
           {DIFFICULTY_LEVELS.map(({ label, value }) => {
@@ -102,7 +102,7 @@ export default function Controls({
             );
           })}
         </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0 }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexShrink: 0, flexBasis: 'auto' }}>
           <button
             onClick={handleShare}
             disabled={isGenerating}
