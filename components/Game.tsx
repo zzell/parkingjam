@@ -27,9 +27,10 @@ export default function Game() {
   const [won, setWon] = useState(false);
   const [generatingMsg, setGeneratingMsg] = useState('');
   const [hintCarId, setHintCarId] = useState<string | null>(null);
+  const [isHinting, setIsHinting] = useState(false);
   const generatingRef = useRef(false);
 
-  const handleGenerate = useCallback(async () => {
+  const handleGenerate = useCallback(async (algoOverride?: GeneratorAlgorithm, diffOverride?: number) => {
     if (generatingRef.current) return;
     generatingRef.current = true;
     setIsGenerating(true);
@@ -38,7 +39,7 @@ export default function Game() {
     setGeneratingMsg('Starting…');
     try {
       await new Promise(r => setTimeout(r, 20));
-      const newBoard = await generateLevel(difficulty, algorithm, setGeneratingMsg);
+      const newBoard = await generateLevel(diffOverride ?? difficulty, algoOverride ?? algorithm, setGeneratingMsg);
       const result = bfsSolve(newBoard);
       setBoard(newBoard);
       setInitialBoard(newBoard);
@@ -52,6 +53,16 @@ export default function Game() {
       generatingRef.current = false;
     }
   }, [difficulty, algorithm]);
+
+  const handleAlgorithmChange = useCallback((algo: GeneratorAlgorithm) => {
+    setAlgorithm(algo);
+    handleGenerate(algo);
+  }, [handleGenerate]);
+
+  const handleDifficultyChange = useCallback((d: number) => {
+    setDifficulty(d);
+    handleGenerate(undefined, d);
+  }, [handleGenerate]);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -79,19 +90,22 @@ export default function Game() {
     });
   }, [won]);
 
-  const handleHint = useCallback(() => {
-    if (won) return;
+  const handleHint = useCallback(async () => {
+    if (won || isHinting) return;
+    setIsHinting(true);
+    await new Promise(r => setTimeout(r, 20));
+    const move = solveFirstMove(board);
+    setIsHinting(false);
+    if (!move) return;
+    setHintCarId(move.carId);
+    setTimeout(() => setHintCarId(null), 350);
     setBoard(prev => {
-      const move = solveFirstMove(prev);
-      if (!move) return prev;
-      setHintCarId(move.carId);
-      setTimeout(() => setHintCarId(null), 350);
       const next = applyMove(prev, move.carId, move.newPos);
       if (isWon(next)) setWon(true);
       setMoves(m => m + 1);
       return next;
     });
-  }, [won]);
+  }, [won, isHinting, board]);
 
   const handleReset = useCallback(() => {
     setBoard(initialBoard);
@@ -117,12 +131,13 @@ export default function Game() {
         moves={moves}
         minMoves={solveResult?.minMoves ?? null}
         isGenerating={isGenerating}
+        isHinting={isHinting}
         algorithm={algorithm}
-        onDifficultyChange={setDifficulty}
+        onDifficultyChange={handleDifficultyChange}
         onGenerate={handleGenerate}
         onReset={handleReset}
         onHint={handleHint}
-        onAlgorithmChange={setAlgorithm}
+        onAlgorithmChange={handleAlgorithmChange}
       />
 
       {/* Grid area */}
@@ -135,7 +150,7 @@ export default function Game() {
         ) : board.length > 0 ? (
           <div style={{ position: 'relative' }}>
             <Grid board={board} onMove={handleMove} disabled={won} animatingCarId={hintCarId} />
-            {won && <WinOverlay moves={moves} minMoves={solveResult?.minMoves ?? null} onNewPuzzle={handleGenerate} />}
+            {won && <WinOverlay moves={moves} minMoves={solveResult?.minMoves ?? null} onNewPuzzle={handleGenerate} onRetry={handleReset} />}
           </div>
         ) : null}
       </div>

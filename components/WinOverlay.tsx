@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 const PX = 'var(--font-pixel)';
 const CYAN = '#00e5ff';
@@ -11,10 +11,25 @@ interface WinOverlayProps {
   moves: number;
   minMoves: number | null;
   onNewPuzzle: () => void;
+  onRetry: () => void;
 }
 
-export default function WinOverlay({ moves, minMoves, onNewPuzzle }: WinOverlayProps) {
+export default function WinOverlay({ moves, minMoves, onNewPuzzle, onRetry }: WinOverlayProps) {
   const isOptimal = minMoves !== null && moves <= minMoves + 2;
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const btn = (onClick: () => void, label: string, style: React.CSSProperties) => (
+    <button onClick={onClick} style={{ fontFamily: PX, fontSize: 8, padding: '8px 0', width: 100, cursor: 'pointer', whiteSpace: 'nowrap', ...style }}>
+      {label}
+    </button>
+  );
 
   return (
     <div style={{
@@ -51,21 +66,27 @@ export default function WinOverlay({ moves, minMoves, onNewPuzzle }: WinOverlayP
             OPTIMAL!
           </div>
         )}
-        <button
-          onClick={onNewPuzzle}
-          style={{
-            fontFamily: PX, fontSize: 8,
-            padding: '8px 16px',
+        <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+          {btn(handleShare, copied ? 'COPIED!' : 'SHARE', {
+            background: copied ? CYAN : 'transparent',
+            color: copied ? '#000' : CYAN,
+            border: `2px solid ${CYAN}`,
+            boxShadow: `0 0 8px ${CYAN}`,
+            transition: 'background 0.15s, color 0.15s',
+          })}
+          {btn(onRetry, 'RETRY', {
+            background: 'transparent',
+            color: GOLD,
+            border: `2px solid ${GOLD}`,
+            boxShadow: `0 0 8px ${GOLD}`,
+          })}
+          {btn(onNewPuzzle, 'NEW PUZZLE', {
             background: PINK,
             color: '#fff',
             border: `2px solid ${PINK}`,
             boxShadow: `0 0 10px ${PINK}, 0 0 20px ${PINK}`,
-            cursor: 'pointer',
-            marginTop: 4,
-          }}
-        >
-          NEW PUZZLE
-        </button>
+          })}
+        </div>
       </div>
     </div>
   );

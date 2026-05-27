@@ -49,6 +49,7 @@ interface ControlsProps {
   moves: number;
   minMoves: number | null;
   isGenerating: boolean;
+  isHinting: boolean;
   algorithm: GeneratorAlgorithm;
   onDifficultyChange: (d: number) => void;
   onGenerate: () => void;
@@ -58,7 +59,7 @@ interface ControlsProps {
 }
 
 export default function Controls({
-  difficulty, moves, minMoves, isGenerating, algorithm,
+  difficulty, moves, minMoves, isGenerating, isHinting, algorithm,
   onDifficultyChange, onGenerate, onReset, onHint, onAlgorithmChange,
 }: ControlsProps) {
   const [tooltip, setTooltip] = useState<GeneratorAlgorithm | null>(null);
@@ -121,52 +122,34 @@ export default function Controls({
               transition: 'all 0.15s',
             }}
           >
-            {copied ? '✓' : '⬆'}
-          </button>
-          <button
-            onClick={onGenerate}
-            disabled={isGenerating}
-            style={{
-              fontFamily: PX, fontSize: 8,
-              padding: '0 10px',
-              height: 34,
-              background: BG_CARD,
-              color: GOLD,
-              border: `2px solid ${PINK}`,
-              boxShadow: `0 0 8px ${PINK}, 0 0 16px ${PINK}`,
-              textShadow: `0 0 6px ${GOLD}`,
-              cursor: isGenerating ? 'not-allowed' : 'pointer',
-              opacity: isGenerating ? 0.7 : 1,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {isGenerating ? '…' : 'NEW'}
+            {copied ? '✓' : '⇧'}
           </button>
         </div>
       </div>
 
-      {/* Generator selector */}
-      <div style={{ position: 'relative' }}>
-        <button
-          onClick={() => { setExpanded(e => !e); setTooltip(null); }}
-          disabled={isGenerating}
-          style={{
-            fontFamily: PX, fontSize: 8,
-            width: '100%', padding: '8px 10px',
-            display: 'flex', alignItems: 'center', gap: 8,
-            background: BG_CARD,
-            border: `2px solid ${CYAN}`,
-            boxShadow: `0 0 6px ${CYAN}`,
-            color: '#fff',
-            cursor: isGenerating ? 'not-allowed' : 'pointer',
-            opacity: isGenerating ? 0.5 : 1,
-            textAlign: 'left',
-          }}
-        >
-          <span style={{ color: CYAN, textShadow: `0 0 5px ${CYAN}`, flexShrink: 0 }}>GENERATOR:</span>
-          <span style={{ flex: 1 }}>{ALGO_INFO[algorithm].label.toUpperCase()}</span>
-          <span style={{ color: CYAN, flexShrink: 0 }}>{expanded ? '▲' : '▼'}</span>
-        </button>
+      {/* Generator selector + New */}
+      <div style={{ display: 'flex', gap: 6, alignItems: 'stretch' }}>
+        <div style={{ position: 'relative', flex: 1 }}>
+          <button
+            onClick={() => { setExpanded(e => !e); setTooltip(null); }}
+            disabled={isGenerating}
+            style={{
+              fontFamily: PX, fontSize: 8,
+              width: '100%', padding: '8px 10px',
+              display: 'flex', alignItems: 'center', gap: 8,
+              background: BG_CARD,
+              border: `2px solid ${CYAN}`,
+              boxShadow: `0 0 6px ${CYAN}`,
+              color: '#fff',
+              cursor: isGenerating ? 'not-allowed' : 'pointer',
+              opacity: isGenerating ? 0.5 : 1,
+              textAlign: 'left',
+            }}
+          >
+            <span style={{ color: CYAN, textShadow: `0 0 5px ${CYAN}`, flexShrink: 0 }}>GENERATOR:</span>
+            <span style={{ flex: 1 }}>{ALGO_INFO[algorithm].label.toUpperCase()}</span>
+            <span style={{ color: CYAN, flexShrink: 0 }}>{expanded ? '▲' : '▼'}</span>
+          </button>
 
         {expanded && (
           <div style={{
@@ -228,6 +211,30 @@ export default function Controls({
             )}
           </div>
         )}
+        </div>
+        <button
+          onClick={onGenerate}
+          disabled={isGenerating}
+          style={{
+            fontFamily: PX, fontSize: 8,
+            padding: '0 10px',
+            width: 90,
+            background: BG_CARD,
+            color: GOLD,
+            border: `2px solid ${PINK}`,
+            boxShadow: `0 0 8px ${PINK}, 0 0 16px ${PINK}`,
+            textShadow: `0 0 6px ${GOLD}`,
+            cursor: isGenerating ? 'not-allowed' : 'pointer',
+            opacity: isGenerating ? 0.7 : 1,
+            flexShrink: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            height: 34,
+          }}
+        >
+          {isGenerating
+            ? <div style={{ width: 10, height: 10, border: `2px solid ${GOLD}`, borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+            : 'GENERATE'}
+        </button>
       </div>
 
       {/* Moves + Reset */}
@@ -242,7 +249,7 @@ export default function Controls({
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
           <button
             onClick={onHint}
-            disabled={isGenerating}
+            disabled={isGenerating || isHinting}
             style={{
               fontFamily: PX, fontSize: 8,
               padding: '6px 12px',
@@ -253,9 +260,13 @@ export default function Controls({
               textShadow: `0 0 5px ${GOLD}`,
               cursor: isGenerating ? 'not-allowed' : 'pointer',
               opacity: isGenerating ? 0.5 : 1,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 52,
             }}
           >
-            HINT
+            {isHinting
+              ? <div style={{ width: 10, height: 10, border: `2px solid ${GOLD}`, borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+              : 'HINT'}
           </button>
           <button
             onClick={onReset}
