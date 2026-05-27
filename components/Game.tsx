@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Grid from './Grid';
 import Controls from './Controls';
 import WinOverlay from './WinOverlay';
-import { BoardState, SolveResult } from '@/lib/types';
+import { BoardState, SolveResult, GenerationStats } from '@/lib/types';
 import { applyMove, isWon } from '@/lib/engine';
 import { bfsSolve, solveFirstMove } from '@/lib/solver';
 import { generateLevel, GeneratorAlgorithm } from '@/lib/generator';
@@ -22,8 +22,9 @@ export default function Game() {
   const [moves, setMoves] = useState(0);
   const [solveResult, setSolveResult] = useState<SolveResult | null>(null);
   const [difficulty, setDifficulty] = useState(100);
-  const [algorithm, setAlgorithm] = useState<GeneratorAlgorithm>('moves');
+  const [algorithm, setAlgorithm] = useState<GeneratorAlgorithm>('chain');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStats, setGenerationStats] = useState<GenerationStats | null>(null);
   const [won, setWon] = useState(false);
   const [generatingMsg, setGeneratingMsg] = useState('');
   const [hintCarId, setHintCarId] = useState<string | null>(null);
@@ -39,11 +40,12 @@ export default function Game() {
     setGeneratingMsg('Starting…');
     try {
       await new Promise(r => setTimeout(r, 20));
-      const newBoard = await generateLevel(diffOverride ?? difficulty, algoOverride ?? algorithm, setGeneratingMsg);
+      const { board: newBoard, stats } = await generateLevel(diffOverride ?? difficulty, algoOverride ?? algorithm, setGeneratingMsg);
       const result = bfsSolve(newBoard);
       setBoard(newBoard);
       setInitialBoard(newBoard);
       setSolveResult(result);
+      setGenerationStats(stats);
       window.location.hash = encodeBoard(newBoard);
       setMoves(0);
       setWon(false);
@@ -133,6 +135,7 @@ export default function Game() {
         isGenerating={isGenerating}
         isHinting={isHinting}
         algorithm={algorithm}
+        generationStats={generationStats}
         onDifficultyChange={handleDifficultyChange}
         onGenerate={handleGenerate}
         onReset={handleReset}
@@ -146,11 +149,12 @@ export default function Game() {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 40, height: 40, border: `3px solid ${CYAN}`, borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite', boxShadow: `0 0 10px ${CYAN}` }} />
             <span style={{ fontFamily: PX, fontSize: 8, color: CYAN, textShadow: `0 0 6px ${CYAN}` }}>{generatingMsg || 'GENERATING…'}</span>
+            <span style={{ fontFamily: PX, fontSize: 7, color: PINK, textShadow: `0 0 5px ${PINK}` }}>complex maps take longer to generate</span>
           </div>
         ) : board.length > 0 ? (
           <div style={{ position: 'relative' }}>
             <Grid board={board} onMove={handleMove} disabled={won} animatingCarId={hintCarId} />
-            {won && <WinOverlay moves={moves} minMoves={solveResult?.minMoves ?? null} onNewPuzzle={handleGenerate} onRetry={handleReset} />}
+            {won && <WinOverlay moves={moves} minMoves={solveResult?.minMoves ?? null} onNewPuzzle={() => handleGenerate()} onRetry={handleReset} />}
           </div>
         ) : null}
       </div>

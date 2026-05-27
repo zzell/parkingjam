@@ -29,6 +29,24 @@ export interface DragState {
   currentPos: number; // row for vertical, col for horizontal
 }
 
+export interface GenerationStats {
+  algorithm: 'moves' | 'chain';
+  moveDepthIterations: number;
+  baseStates: number;
+  baseMoves: number;
+  candidatesTried: number;
+  blockersAdded: number;
+  finalStates: number;
+  finalMoves: number;
+  requiredStates: number;
+  requiredMoves: number;
+  p1BasesYielded: number;
+  p2WorkersRun: number;
+  p2CandidateResults: Array<{ finalStates: number; finalMoves: number; chosen: boolean }>;
+  totalTimeMs: number;
+  parallelWorkers: number;
+}
+
 export interface GameState {
   board: BoardState;
   moves: number;

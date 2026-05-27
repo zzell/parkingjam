@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚗 Parking Jam
 
-## Getting Started
+A neon-soaked, retro-pixel take on the classic Rush Hour sliding puzzle — can you get the red car out? 🕹️
 
-First, run the development server:
+## 🎮 Play now
+
+👉 **[zzell.github.io/parkingjam](https://zzell.github.io/parkingjam)**
+
+No install, no login, just vibes and puzzle-solving.
+
+## ✨ Features
+
+- 🧠 **5 difficulty levels** — from chill warm-up to brain-melting gridlock
+- ⚡ **Two generator algorithms** — *Dependency Chain* (solution-path-guided, deep puzzles) and *Move Depth* (fast & random)
+- 🔀 **5 parallel Web Workers** racing to find the best puzzle for you
+- 💡 **Hint system** — stuck? let the BFS solver nudge you in the right direction
+- 📤 **Share any puzzle** — every board is encoded in the URL, send it to a friend
+- 🏆 **Optimal move counter** — see how close you are to the perfect solution
+
+## 🛠️ Running locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) and start sliding. 🚙💨
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🏗️ Tech stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js 14** (App Router, static export → GitHub Pages)
+- **TypeScript**
+- **Web Workers** for parallel puzzle generation
+- **BFS solver** with full solution-path reconstruction
+- Pixel font + neon CSS — no UI library, pure inline styles
