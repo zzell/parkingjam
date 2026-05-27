@@ -612,7 +612,7 @@ export async function generateLevelRaw(
   const [stateMin, stateMax] = stateRangeForDifficulty(difficulty);
   const minMoves = minMovesForDifficulty(difficulty);
   const bfsLimit = bfsLimitForDifficulty(difficulty);
-  const poolSize = 200;
+  const poolSize = difficulty >= 75 ? 400 : 200;
   const deadline = startTime + 12_000;
   let attempt = 0;
   let bestBoard: BoardState | null = null;

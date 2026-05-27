@@ -22,7 +22,7 @@ export default function Game() {
   const [moves, setMoves] = useState(0);
   const [solveResult, setSolveResult] = useState<SolveResult | null>(null);
   const [difficulty, setDifficulty] = useState(100);
-  const [algorithm, setAlgorithm] = useState<GeneratorAlgorithm>('chain');
+  const [algorithm, setAlgorithm] = useState<GeneratorAlgorithm>('moves');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStats, setGenerationStats] = useState<GenerationStats | null>(null);
   const [won, setWon] = useState(false);
@@ -122,8 +122,10 @@ export default function Game() {
       <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ color: CYAN, textShadow: `0 0 8px ${CYAN}`, fontSize: 18, lineHeight: 1 }}>≫</span>
         <h1 style={{ fontFamily: PX, fontSize: 'clamp(14px, 5vw, 22px)', lineHeight: 1, margin: 0 }}>
-          <span style={{ color: '#fff', textShadow: `0 0 10px ${CYAN}, 0 0 22px ${CYAN}` }}>PARKING </span>
-          <span style={{ color: PINK, textShadow: `0 0 10px ${PINK}, 0 0 22px ${PINK}` }}>JAM</span>
+          <a href="https://zzell.github.io/parkingjam" style={{ textDecoration: 'none' }}>
+            <span style={{ color: '#fff', textShadow: `0 0 10px ${CYAN}, 0 0 22px ${CYAN}` }}>PARKING </span>
+            <span style={{ color: PINK, textShadow: `0 0 10px ${PINK}, 0 0 22px ${PINK}` }}>JAM</span>
+          </a>
         </h1>
         <span style={{ color: CYAN, textShadow: `0 0 8px ${CYAN}`, fontSize: 18, lineHeight: 1 }}>≪</span>
       </div>

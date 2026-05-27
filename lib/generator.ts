@@ -24,6 +24,7 @@ function runWorkerRound(
     let bestScore = -Infinity;
     let bestStats: Omit<GenerationStats, 'parallelWorkers' | 'algorithm'> | null = null;
     let doneCount = 0;
+    const workerTotals = new Array(NUM_WORKERS).fill(POOL_SIZE);
 
     const finish = (board: BoardState, score: number, stats: typeof bestStats) => {
       if (settled) return;
@@ -37,13 +38,15 @@ function runWorkerRound(
       workers.push(worker);
 
       worker.onmessage = (e) => {
-        const data = e.data as { type: string; msg?: string; count?: number; board?: BoardState; score?: number; stats?: Omit<GenerationStats, 'parallelWorkers' | 'algorithm'> };
+        const data = e.data as { type: string; msg?: string; count?: number; total?: number; board?: BoardState; score?: number; stats?: Omit<GenerationStats, 'parallelWorkers' | 'algorithm'> };
 
         if (data.type === 'progress') {
           if (algorithm !== 'chain' && data.count != null) {
             workerSamples[i] = data.count;
-            const total = workerSamples.reduce((a, b) => a + b, 0);
-            onProgress?.(`Sampling ${total}/${NUM_WORKERS * POOL_SIZE}…`);
+            if (data.total != null) workerTotals[i] = data.total;
+            const sampledTotal = workerSamples.reduce((a, b) => a + b, 0);
+            const maxTotal = workerTotals.reduce((a, b) => a + b, 0);
+            onProgress?.(`Sampling ${sampledTotal}/${maxTotal}…`);
           } else if (i === 0) {
             onProgress?.(data.msg ?? '');
           }

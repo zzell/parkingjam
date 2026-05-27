@@ -20,8 +20,16 @@ const DIFFICULTY_LEVELS: Array<{ label: string; value: number }> = [
 ];
 
 const ALGO_INFO: Record<GeneratorAlgorithm, { label: string; description: string }> = {
+  moves: {
+    label: 'Move Depth',
+    description:
+      'Samples random puzzles across 5 parallel workers and races to the first that meets ' +
+      'the state range and move floor for the selected level. ' +
+      'Levels 4 and 5 sample up to 400 boards per worker. ' +
+      'Fast, random, effective for all difficulty levels.',
+  },
   chain: {
-    label: 'Dependency Chain',
+    label: 'Dep. Chain',
     description:
       'Two-phase pipeline across 5 parallel workers. ' +
       'Phase 1: each worker samples up to 200 random boards and streams up to 10 good base maps as they are found. ' +
@@ -30,13 +38,6 @@ const ALGO_INFO: Record<GeneratorAlgorithm, { label: string; description: string
       'keep only moves that strictly increase puzzle complexity, repeat until both the state range and move floor are met. ' +
       'First worker to find a perfect board cancels all others. ' +
       'If none is perfect, the best result across all workers is returned.',
-  },
-  moves: {
-    label: 'Move Depth',
-    description:
-      'Samples random puzzles across 5 parallel workers and races to the first that meets ' +
-      'the state range and move floor for the selected level. ' +
-      'Fast, random, effective for all difficulty levels.',
   },
 };
 
@@ -120,13 +121,13 @@ export default function Controls({
 
       {/* Generator selector + Generate + ? */}
       <div style={{ display: 'flex', gap: 6, alignItems: 'stretch' }}>
-        <div style={{ position: 'relative', flex: 1 }}>
+        <div style={{ position: 'relative', flex: 1, height: 34 }}>
           <button
             onClick={() => { setExpanded(e => !e); setTooltip(null); }}
             disabled={isGenerating}
             style={{
               fontFamily: PX, fontSize: 8,
-              width: '100%', padding: '8px 10px',
+              width: '100%', height: '100%', padding: '0 10px',
               display: 'flex', alignItems: 'center', gap: 8,
               background: BG_CARD,
               border: `2px solid ${CYAN}`,
@@ -369,7 +370,7 @@ export default function Controls({
           <span style={{ color: PINK }}> | </span>
           BEST: <span style={{ color: '#fff' }}>{minMoves ?? '—'}</span>
         </span>
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+        <div style={{ marginLeft: 'auto', marginRight: -10, display: 'flex', alignItems: 'center' }}>
           <button
             onClick={onHint}
             disabled={isGenerating || isHinting}
@@ -413,8 +414,7 @@ export default function Controls({
               disabled={isGenerating}
               style={{
                 fontFamily: PX, fontSize: 8,
-                width: 54,
-                padding: '6px 0',
+                padding: '6px 10px',
                 background: 'transparent',
                 color: copied ? '#39ff14' : CYAN,
                 border: 'none',
