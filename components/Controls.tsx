@@ -416,19 +416,19 @@ export default function Controls({
                 fontFamily: PX, fontSize: 8,
                 padding: '6px 10px',
                 background: 'transparent',
-                color: copied ? '#39ff14' : CYAN,
+                color: CYAN,
                 border: 'none',
-                textShadow: copied ? '0 0 5px #39ff14' : `0 0 5px ${CYAN}`,
+                textShadow: `0 0 5px ${CYAN}`,
                 cursor: isGenerating ? 'not-allowed' : 'pointer',
                 opacity: isGenerating ? 0.4 : 1,
                 transition: 'color 0.15s',
               }}
             >
-              {copied ? '✓' : 'SHARE'}
+              SHARE
             </button>
             {copied && (
               <div style={{
-                position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)',
+                position: 'absolute', top: 'calc(100% + 6px)', right: 0,
                 background: CYAN, color: '#000',
                 fontFamily: PX, fontSize: 7,
                 padding: '4px 8px',
